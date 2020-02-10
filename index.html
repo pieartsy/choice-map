@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 
 <html>
-
 <head>
+    <!--uses unicode characters-->
+    <meta charset="utf-8">
+    <!--makes it responsive-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Interactive Fiction Choices Map</title>
-    <script src="cytoscape.min.js"></script>
     <link rel = "stylesheet" type = "text/css" href = "stylesheet.css">
+    <!--cytoscape, a graphing library-->
+    <script src="cytoscape.min.js"></script>
+    <!--allows drag and drop edges-->
+    <script src="cytoscape-edgehandles.js"></script>
+    <!--allows html labels-->
+    <script src="cytoscape-node-html-label.min.js"></script>
+    <!--allows undo and redo-->
+    <script src="cytoscape-undo-redo.js"></script>
 </head>
 <body>
     <div id="cy"></div>
