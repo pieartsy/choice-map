@@ -57,13 +57,14 @@ document.addEventListener("keydown", function (e) {
       ur.redo();
 });
 
-cy.on("click", function(e) {
-  ur.do("add", {
+document.addEventListener("click", function(e){
+  if (e.altKey)
+    ur.do("add", {
       group: "nodes",
-      id: "testid",
+      data: { weight: 75, name: "New Node" },
       renderedPosition: {
-          x: e.renderedPosition.x,
-          y: e.renderedPosition.y,
+        x: e.clientX,
+        y: e.clientY,
       },
-  });
+    });
 });
