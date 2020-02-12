@@ -8,11 +8,11 @@ var cy = cytoscape({
 elements: {
   //the circles with labels
     nodes: [
-      { data: { id: 'a', name: "atest"} },
-      { data: { id: 'b', name: "btest"} },
-      { data: { id: 'c', name: "ctest" } },
-      { data: { id: 'd', name: "dtest" } },
-      { data: { id: 'e', name: "etest" } },
+      { data: { id: 'a', label: "atest"} },
+      { data: { id: 'b', label: "btest"} },
+      { data: { id: 'c', label: "ctest" } },
+      { data: { id: 'd', label: "dtest" } },
+      { data: { id: 'e', label: "etest" } },
     ],
     //the lines connecting them
     edges: [
@@ -27,7 +27,18 @@ elements: {
   //styles
   style: [
     //adds the name attribute (the node's label, ex: 'btest') to the node
-    { selector: 'node', style: { 'content': 'data(name)' }  },
+    { 
+      selector: "node",
+      style: { 
+          "width": 80,
+          "height": 80,
+          "label": "data(label)",
+          "text-wrap": "wrap",
+          "text-max-width": 70,
+          "text-valign": "center",
+          "text-halign": "center"
+      }
+    },
     //styles the edges as having directed arrows and bezier curves
     { selector: 'edge', style: {  'curve-style': 'bezier', 'target-arrow-shape': 'triangle' } },
     //a selector for undo/redo
@@ -54,6 +65,7 @@ elements: {
           'border-color': 'red'
         }
     },
+    //the target node you're gonna add an edge to turns red
     { selector: '.eh-target',
         style: {
           'border-width': 2,
@@ -69,10 +81,20 @@ elements: {
           'source-arrow-color': 'red'
         }
     },
-
-    { selector: '.eh-ghost-edge.eh-preview-active',
-      style: { 'opacity': 0 } }
+    //not sure what this is tbfh
+    { selector: '.eh-ghost-edge.eh-preview-active', style: { 'opacity': 0 } },
+    
+    //color styles
+    { selector: '.red', style: { 'background-color': '#f45353' } },
+    { selector: '.orange', style: { 'background-color': '#e78d41' } },
+    { selector: '.yellow', style: { 'background-color': '#feff7d' } },
+    { selector: '.green', style: { 'background-color': '#5bbd67' } },
+    { selector: '.blue', style: { 'background-color': '#799bf6' } },
+    { selector: '.purple', style: { 'background-color': '#a54bd8' } },
+    { selector: '.white', style: { 'background-color': '#fff' } },
+    { selector: '.black', style: { 'background-color': '#000', 'color': '#fff' } },
     ],
+
 //makes the layout a directed tree graph
   layout: {
     name: 'breadthfirst',
@@ -127,6 +149,47 @@ document.addEventListener("click", function(e){
 });
 
 //edge handles extension
-var eh = cy.edgehandles({});
+cy.edgehandles({});
 
+//ctxmenu extension
+cy.cxtmenu({
+  selector: 'node',
+
+  commands: [
+    {
+      content: 'Make tooltip',
+      select: function(ele){
+        console.log( ele.id() );
+      }
+    },
+
+    {
+      content: 'Text',
+      select: function(ele){
+        console.log( ele.position() );
+      }
+    }
+  ]
 });
+
+cy.cxtmenu({
+  selector: 'edge',
+
+  commands: [
+    {
+      content: 'bg1',
+      select: function(){
+        console.log( 'bg1' );
+      }
+    },
+
+    {
+      content: 'bg2',
+      select: function(){
+        console.log( 'bg2' );
+      }
+    }
+  ]
+});
+
+})
