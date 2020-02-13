@@ -190,15 +190,15 @@ document.getElementById("colors").addEventListener("change", function(e) {
 //this has a weird bug right now
 //it changes every previously selected node's label also?
 //when a node is selected
-cy.on("select", "node", function(e){
+//cy.on("select", "node", function(e){
   //the selected node is the variable, 'node'
-  var node = e.target;
+  //var node = e.target;
   //when the label button div is clicked
-  document.getElementById("labelbutton").addEventListener("click", function(e) {
+  //document.getElementById("labelbutton").addEventListener("click", function(e) {
     //the node's data is changed to the input from the nodelabel div
-    node.data('label', document.getElementById("nodelabel").value);
-    });
-});
+    //node.data('label', document.getElementById("nodelabel").value);
+    //});
+//});
 
 //end of DOM listener
 });
