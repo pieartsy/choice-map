@@ -180,24 +180,29 @@ cy.nodeHtmlLabel([{
 //change the color of nodes and edges
 //listens to whether the user selects an option on the dropdown form with ID "colors"
 function changecolor(){    
-      //when you select a node (or nodes)
+      //the newcolor variable is the selected color in the dropdown
       var newcolor = colors.options[colors.selectedIndex].text;
+      //when you select a node (or nodes)
       cy.on("select", "node", function(e){
-        var node = e.target;
-        var oldcolor = node.classes()[1];
         //the target node is the variable 'node'
-        //the node's color class is changed to the selected color in the dropdown
-        node.removeClass(oldcolor);
+        var node = e.target;
+        //the old color of the node is saved as "oldcolor"
+        var oldnodecolor = node.classes()[1];
+        //the old color is removed and the new color is added to the node
+        node.removeClass(oldnodecolor);
         node.addClass(newcolor);
+        console.log(oldnodecolor)
       });
       //when you select an edge (or edges)
       cy.on("select", "edge", function(e){
         //the target node is the variable 'edge'
         var edge = e.target;
-        var oldcolor = edge.classes();
-        //the edge's color class is changed to the selected color in the dropdown
-        edge.removeClass(oldcolor);
+        //the old color of the edge is saved as "oldcolor"
+        var oldedgecolor = edge.classes()[0];
+        //the old color is removed and the new color is added to the edge
+        edge.removeClass(oldedgecolor);
         edge.addClass(newcolor);
+        console.log(oldedgecolor)
       });
 }
 
@@ -215,7 +220,7 @@ function undocolor(oldcolor, newcolor, node = null, edge = null) {
 ur.action("redoundocolor", changecolor, undocolor);
 
 document.getElementById("colors").addEventListener("change", function(e) {
-  ur.do("redoundocolor")
+  changecolor()
 });
 
 //this has a weird bug right now
