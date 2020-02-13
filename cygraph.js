@@ -8,20 +8,20 @@ var cy = cytoscape({
 elements: {
   //the circles with labels
     nodes: [
-      { data: { id: 'a', label: "atest"} },
-      { data: { id: 'b', label: "btest"} },
-      { data: { id: 'c', label: "ctest" } },
-      { data: { id: 'd', label: "dtest" } },
-      { data: { id: 'e', label: "etest" } },
+      { data: { id: 'a', label: "atest", variable: "avariable", value: 1 }, classes: ["label", ".white"] },
+      { data: { id: 'b', label: "btest", variable: "bvariable", value: 2 }, classes: ["label", ".white"] },
+      { data: { id: 'c', label: "ctest", variable: "cvariable", value: 4  }, classes: ["label", ".white"] },
+      { data: { id: 'd', label: "dtest", variable: "dvariable", value: -2  }, classes: ["label", ".white"] },
+      { data: { id: 'e', label: "etest", variable: "evariable", value: 3  }, classes: ["label", ".white"] },
     ],
     //the lines connecting them
     edges: [
-      { data: { source: 'a', target: 'b', label: 'edgetest' } },
-      { data: { source: 'b', target: 'c' } },
-      { data: { source: 'b', target: 'd' } },
-      { data: { source: 'd', target: 'e' } },
-      { data: { source: 'c', target: 'e' } },
-      { data: { source: 'b', target: 'e' } },
+      { data: { source: 'a', target: 'b', label: 'edgetest' }, classes: ".white" },
+      { data: { source: 'b', target: 'c' }, classes: ".white" },
+      { data: { source: 'b', target: 'd' }, classes: ".white" },
+      { data: { source: 'd', target: 'e' }, classes: ".white" },
+      { data: { source: 'c', target: 'e' }, classes: ".white" },
+      { data: { source: 'b', target: 'e' }, classes: ".white" },
     ]
   },
   //styles
@@ -32,11 +32,6 @@ elements: {
       style: { 
           "width": 80,
           "height": 80,
-          "label": "data(label)",
-          "text-wrap": "wrap",
-          "text-max-width": 70,
-          "text-valign": "center",
-          "text-halign": "center",
           'background-color': '#fff',
           'border-color': "#000",
           "border-width": 2
@@ -57,6 +52,7 @@ elements: {
           "line-color": "#50d7ff",
           "target-arrow-color": "#50d7ff",
      } },
+
     // some style for edge handler
     //for the little dot that you grab to make an edge
     { selector: '.eh-handle',
@@ -156,7 +152,7 @@ document.addEventListener("click", function(e){
   //add a node where the mouse is
     ur.do("add", {
       group: "nodes",
-      data: { weight: 75, label: "New Node" },
+      data: { label: "New node", variable: "new variable", value: 0 }, classes: "label",
       renderedPosition: {
         x: e.clientX,
         y: e.clientY,
@@ -168,37 +164,77 @@ document.addEventListener("click", function(e){
 cy.edgehandles({});
 
 
+//html labels extension
+cy.nodeHtmlLabel([{
+  query: '.label',
+  valign: "center",
+  halign: "center",
+  valignBox: "center",
+  halignBox: "center",
+  tpl: function(data) {
+      return '<p>' + data.label + '<br>' + data.variable + ': ' +  data.value + '</p>';
+  }
+}]);
+
+
 //change the color of nodes and edges
 //listens to whether the user selects an option on the dropdown form with ID "colors"
+function changecolor(){    
+      //when you select a node (or nodes)
+      var newcolor = colors.options[colors.selectedIndex].text;
+      cy.on("select", "node", function(e){
+        var node = e.target;
+        var oldcolor = node.classes()[1];
+        //the target node is the variable 'node'
+        //the node's color class is changed to the selected color in the dropdown
+        node.removeClass(oldcolor);
+        node.addClass(newcolor);
+      });
+      //when you select an edge (or edges)
+      cy.on("select", "edge", function(e){
+        //the target node is the variable 'edge'
+        var edge = e.target;
+        var oldcolor = edge.classes();
+        //the edge's color class is changed to the selected color in the dropdown
+        edge.removeClass(oldcolor);
+        edge.addClass(newcolor);
+      });
+}
+
+function undocolor(oldcolor, newcolor, node = null, edge = null) {
+  if (node) {
+    node.removeClass(newcolor);
+    node.addClass(oldcolor);
+  }
+  else if (edge) {
+    edge.removeClass(newcolor);
+    edge.addClass(oldcolor);
+  }
+}
+
+ur.action("redoundocolor", changecolor, undocolor);
+
 document.getElementById("colors").addEventListener("change", function(e) {
-  //when you select a node (or nodes)
-  cy.on("select", "node", function(e){
-    //the target node is the variable 'node'
-    var node = e.target;
-    //the node's color class is changed to the selected color in the dropdown
-    node.classes(colors.options[colors.selectedIndex].text);
-  });
-  //when you select an edge (or edges)
-  cy.on("select", "edge", function(e){
-    //the target node is the variable 'edge'
-    var edge = e.target;
-    //the edge's color class is changed to the selected color in the dropdown
-    edge.classes(colors.options[colors.selectedIndex].text);
-  });
+  ur.do("redoundocolor")
 });
 
 //this has a weird bug right now
 //it changes every previously selected node's label also?
 //when a node is selected
-//cy.on("select", "node", function(e){
+cy.on("select", "node", function(e){
   //the selected node is the variable, 'node'
-  //var node = e.target;
+  var node = e.target;
   //when the label button div is clicked
-  //document.getElementById("labelbutton").addEventListener("click", function(e) {
+  document.getElementById("labelbutton").addEventListener("click", function(e) {
     //the node's data is changed to the input from the nodelabel div
-    //node.data('label', document.getElementById("nodelabel").value);
-    //});
-//});
+    node.data('label', document.getElementById("nodelabel").value);
+    console.log(node.data('label'));
+    console.log(node)
+    node.data('variable', document.getElementById("nodevariable").value);
+    var newval = Number(node.data('value')) + Number(document.getElementById("nodevariablevalue").value);
+    node.data('value', newval);
+  })
+});
 
 //end of DOM listener
 });
