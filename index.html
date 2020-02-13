@@ -7,27 +7,56 @@
     <!--makes it responsive-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Interactive Fiction Choices Map</title>
-    <link rel = "stylesheet" type = "text/css" href = "stylesheet.css">
+    <link rel = "stylesheet" type = "text/css" href = "exts\stylesheet.css">
     <!--cytoscape, a graphing library-->
-    <script src="cytoscape.min.js"></script>
+    <script src="exts\cytoscape.min.js"></script>
     <!--allows drag and drop edge creation-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.10/lodash.js"></script>
-    <script src="cytoscape-edgehandles.js"></script>
+    <script src="exts\cytoscape-edgehandles.js"></script>
     <!--allows undo and redo-->
-    <script src="cytoscape-undo-redo.js"></script>
+    <script src="exts\cytoscape-undo-redo.js"></script>
     <!--context menu-->
-    <script src="cytoscape-cxtmenu.js"></script>
+    <script src="exts\cytoscape-cxtmenu.js"></script>
+    <!--tooltips-->
+    <script src="https://unpkg.com/popper.js@1.16.0/dist/umd/popper.js"></script>
+	<script src="exts\cytoscape-popper.js"></script>
+
+	<script src="https://unpkg.com/tippy.js@5.1.3/dist/tippy-bundle.iife.min.js"></script>
+	<link rel="stylesheet" href="https://unpkg.com/tippy.js@5.1.3/dist/tippy.css" />
     <!--my script with all the created nodes and stuff-->
     <script src="cygraph.js"></script>
 </head>
 <body>
-    <h1>Choices map</h1>
-    <ul>
-        <li>alt+click to create node </li>
-        <li>drag from node to create connection</li>
-        <li>select a node or connection and press delete to delete</li>
-        <li>ctrl+z to undo, ctrl+y to redo [doesn't work with creation of connections, working on it!]</li>
-    </ul>
+    <div id="sidebar">
+        <h1>Choices map</h1>
+        <ul>
+            <li>alt+click to create node </li>
+            <li>drag from node to create connection</li>
+            <li>select a node or connection and press delete to delete</li>
+            <li>ctrl+z to undo, ctrl+y to redo [doesn't work with creation of connections, working on it!]</li>
+        </ul>
+        <form>
+            Select a color, then a node or edge:
+            <select id="colors">
+              <option></option>
+              <option>red</option>
+              <option>orange</option>
+              <option>yellow</option>
+              <option>green</option>
+              <option>blue</option>
+              <option>purple</option>
+              <option>pink</option>
+              <option>white</option>
+              <option>black</option>
+            </select>
+          </form>
+<br>
+          <form>
+            Select a node or edge, then input here to change its label.<br>
+            Node label: <input type="text" id="nodelabel" value=""><br><br>
+            <input type="button" id="labelbutton" value="Submit">
+          </form>
+    </div>
     <div id="cy"></div>
 
 </body>

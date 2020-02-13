@@ -16,7 +16,7 @@ elements: {
     ],
     //the lines connecting them
     edges: [
-      { data: { source: 'a', target: 'b' } },
+      { data: { source: 'a', target: 'b', label: 'edgetest' } },
       { data: { source: 'b', target: 'c' } },
       { data: { source: 'b', target: 'd' } },
       { data: { source: 'd', target: 'e' } },
@@ -36,13 +36,27 @@ elements: {
           "text-wrap": "wrap",
           "text-max-width": 70,
           "text-valign": "center",
-          "text-halign": "center"
+          "text-halign": "center",
+          'background-color': '#fff',
+          'border-color': "#000",
+          "border-width": 2
       }
     },
-    //styles the edges as having directed arrows and bezier curves
-    { selector: 'edge', style: {  'curve-style': 'bezier', 'target-arrow-shape': 'triangle' } },
-    //a selector for undo/redo
-    { selector: ':selected', style: {  } },
+    //styles the edges as having directed arrows and bezier curves with labels
+    { selector: 'edge',
+        style: {
+          'curve-style': 'bezier',
+          'target-arrow-shape': 'triangle',
+          'arrow-scale': 2,
+          'label': "data(label)"} },
+    //selected nodes or edges have cyan outlines
+    { selector: ':selected', 
+        style: { 
+          "border-color": '#50d7ff',
+          "border-width": 4,
+          "line-color": "#50d7ff",
+          "target-arrow-color": "#50d7ff",
+     } },
     // some style for edge handler
     //for the little dot that you grab to make an edge
     { selector: '.eh-handle',
@@ -61,14 +75,14 @@ elements: {
     //when you grab the edge handle and move it away from the given node, its border is red
     { selector: '.eh-source',
         style: {
-          'border-width': 2,
+          'border-width': 4,
           'border-color': 'red'
         }
     },
     //the target node you're gonna add an edge to turns red
     { selector: '.eh-target',
         style: {
-          'border-width': 2,
+          'border-width': 4,
           'border-color': 'red'
         }
     },
@@ -78,21 +92,23 @@ elements: {
           'background-color': 'red',
           'line-color': 'red',
           'target-arrow-color': 'red',
-          'source-arrow-color': 'red'
+          'source-arrow-color': 'red',
+          'line-style': "dashed"
         }
     },
     //not sure what this is tbfh
     { selector: '.eh-ghost-edge.eh-preview-active', style: { 'opacity': 0 } },
     
-    //color styles
-    { selector: '.red', style: { 'background-color': '#f45353' } },
-    { selector: '.orange', style: { 'background-color': '#e78d41' } },
-    { selector: '.yellow', style: { 'background-color': '#feff7d' } },
-    { selector: '.green', style: { 'background-color': '#5bbd67' } },
-    { selector: '.blue', style: { 'background-color': '#799bf6' } },
-    { selector: '.purple', style: { 'background-color': '#a54bd8' } },
-    { selector: '.white', style: { 'background-color': '#fff' } },
-    { selector: '.black', style: { 'background-color': '#000', 'color': '#fff' } },
+    //color styles for nodes and edges
+    { selector: '.red', style: { 'background-color': '#f45353', 'line-color': '#f45353', 'target-arrow-color': '#f45353' } },
+    { selector: '.orange', style: { 'background-color': '#e78d41', 'line-color': '#e78d41', 'target-arrow-color': '#e78d41'  } },
+    { selector: '.yellow', style: { 'background-color': '#fbf086', 'line-color': '#fbf086', 'target-arrow-color': '#fbf086'   } },
+    { selector: '.green', style: { 'background-color': '#5bbd67', 'line-color': '#5bbd67', 'target-arrow-color': '#5bbd67'   } },
+    { selector: '.blue', style: { 'background-color': '#799bf6', 'line-color': '#799bf6', 'target-arrow-color': '#799bf6'   } },
+    { selector: '.purple', style: { 'background-color': '#a54bd8', 'line-color': '#a54bd8', 'target-arrow-color': '#a54bd8'   } },
+    { selector: '.pink', style: { 'background-color': '#ff9cdd', 'line-color': '#ff9cdd', 'target-arrow-color': '#ff9cdd'   } },
+    { selector: '.white', style: { 'background-color': '#fff', 'line-color': 'grey', 'target-arrow-color': 'grey'   } },
+    { selector: '.black', style: { 'background-color': '#000', 'color': '#fff', 'line-color': '#000', 'target-arrow-color': '#000'   } },
     ],
 
 //makes the layout a directed tree graph
@@ -140,7 +156,7 @@ document.addEventListener("click", function(e){
   //add a node where the mouse is
     ur.do("add", {
       group: "nodes",
-      data: { weight: 75, name: "New Node" },
+      data: { weight: 75, label: "New Node" },
       renderedPosition: {
         x: e.clientX,
         y: e.clientY,
@@ -151,45 +167,38 @@ document.addEventListener("click", function(e){
 //edge handles extension
 cy.edgehandles({});
 
-//ctxmenu extension
-cy.cxtmenu({
-  selector: 'node',
 
-  commands: [
-    {
-      content: 'Make tooltip',
-      select: function(ele){
-        console.log( ele.id() );
-      }
-    },
-
-    {
-      content: 'Text',
-      select: function(ele){
-        console.log( ele.position() );
-      }
-    }
-  ]
+//change the color of nodes and edges
+//listens to whether the user selects an option on the dropdown form with ID "colors"
+document.getElementById("colors").addEventListener("change", function(e) {
+  //when you select a node (or nodes)
+  cy.on("select", "node", function(e){
+    //the target node is the variable 'node'
+    var node = e.target;
+    //the node's color class is changed to the selected color in the dropdown
+    node.classes(colors.options[colors.selectedIndex].text);
+  });
+  //when you select an edge (or edges)
+  cy.on("select", "edge", function(e){
+    //the target node is the variable 'edge'
+    var edge = e.target;
+    //the edge's color class is changed to the selected color in the dropdown
+    edge.classes(colors.options[colors.selectedIndex].text);
+  });
 });
 
-cy.cxtmenu({
-  selector: 'edge',
-
-  commands: [
-    {
-      content: 'bg1',
-      select: function(){
-        console.log( 'bg1' );
-      }
-    },
-
-    {
-      content: 'bg2',
-      select: function(){
-        console.log( 'bg2' );
-      }
-    }
-  ]
+//this has a weird bug right now
+//it changes every previously selected node's label also?
+//when a node is selected
+cy.on("select", "node", function(e){
+  //the selected node is the variable, 'node'
+  var node = e.target;
+  //when the label button div is clicked
+  document.getElementById("labelbutton").addEventListener("click", function(e) {
+    //the node's data is changed to the input from the nodelabel div
+    node.data('label', document.getElementById("nodelabel").value);
+    });
 });
 
-})
+//end of DOM listener
+});
