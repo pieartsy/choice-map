@@ -295,4 +295,42 @@ cy.on("select", "edge", function(e){
 });
 
 
+//save function
+function savejson(exportName, exportObj){
+  var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+  var downloadjson = document.createElement('a');
+  downloadjson.setAttribute("href", dataStr);
+  downloadjson.setAttribute("download", exportName + ".json");
+  document.body.appendChild(downloadjson); // required for firefox
+  downloadjson.click();
+  downloadjson.remove();
+}
+//save listener
+document.getElementById("save").addEventListener("click", function(e) {
+ savejson('graph', cy.json());
+});
+
+//export png function
+function exportpng(filename, data) {
+  const link = document.createElement('a');
+  link.download = 'graph.png';
+  link.href = cy.png();
+  link.click();
+}
+//export png listener
+document.getElementById("export").addEventListener("click", function(e) {
+  exportpng('graph', cy.png());
+});
+
+//document.getElementById("load").addEventListener("click", function(e) {
+  //  var file = e.target.files[0];
+    //if (file) {
+//      var reader = new FileReader();
+  //    reader.onload = function(e) {
+    //    var contents =e.target.result;
+      //  console.log(contents, JSON.parse(reader.result))
+//      };
+  //  }
+//});
+
 });//end of DOM listener

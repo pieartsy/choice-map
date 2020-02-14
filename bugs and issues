@@ -7,3 +7,12 @@ xxxx changing size of node based on html label xxxx removed
 can't undo or redo colors, labels, or edge adding
 
 doubling effect of value change // fixed
+
+if you turn an edge black the font turns white
+
+features tba:
+    when i select a node, the color/shape selection is set to the node's current color/shape and then changing the dropdown changes the node
+        - if multiple nodes are selected, the selection is set to nothing and changing the dropdown changes all the nodes' colors/shapes
+    load graph from json
+
+better "save as" json and png
