@@ -8,11 +8,11 @@ var cy = cytoscape({
 elements: {
   //the circles with labels
     nodes: [
-      { data: { id: 'a', label: "atest", variable: "avariable", value: 1 }, classes: ["label", ".white"] },
-      { data: { id: 'b', label: "btest", variable: "bvariable", value: 2 }, classes: ["label", ".white"] },
-      { data: { id: 'c', label: "ctest", variable: "cvariable", value: 4  }, classes: ["label", ".white"] },
-      { data: { id: 'd', label: "dtest", variable: "dvariable", value: -2  }, classes: ["label", ".white"] },
-      { data: { id: 'e', label: "etest", variable: "evariable", value: 3  }, classes: ["label", ".white"] },
+      { data: { id: 'a', label: "atest", variable: "avariable", value: 1 }, classes: [".white", ".ellipse"] },
+      { data: { id: 'b', label: "btest", variable: "bvariable", value: 2 }, classes: [".white", ".ellipse"] },
+      { data: { id: 'c', label: "ctest", variable: "cvariable", value: 4  }, classes: [".white", ".ellipse"] },
+      { data: { id: 'd', label: "dtest", variable: "dvariable", value: -2  }, classes: [".white", ".ellipse"] },
+      { data: { id: 'e', label: "etest", variable: "evariable", value: 3  }, classes: [".white", ".ellipse"] },
     ],
     //the lines connecting them
     edges: [
@@ -29,9 +29,16 @@ elements: {
     //adds the name attribute (the node's label, ex: 'btest') to the node
     { 
       selector: "node",
-      style: { 
-          "width": 80,
-          "height": 80,
+      style: {
+          "padding": 30,
+          "padding-in-relation-to": 'average',
+          "label": "data(label)",
+          "width": 'label',
+          "height": 'label',
+          "text-wrap": "wrap",
+          "text-max-width": 60,
+          "text-valign": "center",
+          "text-halign": "center",
           'background-color': '#fff',
           'border-color': "#000",
           "border-width": 2
@@ -63,6 +70,7 @@ elements: {
           'shape': 'ellipse',
           'overlay-opacity': 0,
           'border-width': 12, // makes the handle easier to hit
+          'padding': 0,
           'border-opacity': 0
         }
     },
@@ -97,14 +105,22 @@ elements: {
     
     //color styles for nodes and edges
     { selector: '.red', style: { 'background-color': '#f45353', 'line-color': '#f45353', 'target-arrow-color': '#f45353' } },
-    { selector: '.orange', style: { 'background-color': '#e78d41', 'line-color': '#e78d41', 'target-arrow-color': '#e78d41'  } },
-    { selector: '.yellow', style: { 'background-color': '#fbf086', 'line-color': '#fbf086', 'target-arrow-color': '#fbf086'   } },
-    { selector: '.green', style: { 'background-color': '#5bbd67', 'line-color': '#5bbd67', 'target-arrow-color': '#5bbd67'   } },
-    { selector: '.blue', style: { 'background-color': '#799bf6', 'line-color': '#799bf6', 'target-arrow-color': '#799bf6'   } },
-    { selector: '.purple', style: { 'background-color': '#a54bd8', 'line-color': '#a54bd8', 'target-arrow-color': '#a54bd8'   } },
-    { selector: '.pink', style: { 'background-color': '#ff9cdd', 'line-color': '#ff9cdd', 'target-arrow-color': '#ff9cdd'   } },
-    { selector: '.white', style: { 'background-color': '#fff', 'line-color': 'grey', 'target-arrow-color': 'grey'   } },
-    { selector: '.black', style: { 'background-color': '#000', 'color': '#fff', 'line-color': '#000', 'target-arrow-color': '#000'   } },
+    { selector: '.orange', style: { 'background-color': '#e78d41', 'line-color': '#e78d41', 'target-arrow-color': '#e78d41' } },
+    { selector: '.yellow', style: { 'background-color': '#fbf086', 'line-color': '#fbf086', 'target-arrow-color': '#fbf086' } },
+    { selector: '.green', style: { 'background-color': '#5bbd67', 'line-color': '#5bbd67', 'target-arrow-color': '#5bbd67' } },
+    { selector: '.blue', style: { 'background-color': '#799bf6', 'line-color': '#799bf6', 'target-arrow-color': '#799bf6' } },
+    { selector: '.purple', style: { 'background-color': '#a554ce', 'line-color': '#a554ce', 'target-arrow-color': '#a554ce' } },
+    { selector: '.pink', style: { 'background-color': '#ff9cdd', 'line-color': '#ff9cdd', 'target-arrow-color': '#ff9cdd' } },
+    { selector: '.white', style: { 'background-color': '#fff', 'line-color': 'grey', 'target-arrow-color': 'grey' } },
+    { selector: '.black', style: { 'background-color': '#000', 'color': '#fff', 'line-color': '#000', 'target-arrow-color': '#000' } },
+
+    //shape styles for nodes
+    { selector: '.ellipse', style: { "shape": 'ellipse' } },
+    { selector: '.rectangle', style: { "shape": 'rectangle' } },
+    { selector: '.diamond', style: { "shape": 'diamond' } },
+    { selector: '.pentagon', style: { "shape": 'pentagon' } },
+    { selector: '.hexagon', style: { "shape": 'hexagon' } },
+    { selector: '.star', style: { "shape": 'star' } },
     ],
 
 //makes the layout a directed tree graph
@@ -116,10 +132,10 @@ elements: {
 }); // cy init
 
 // test for traversing the tree
-var a = cy.$('#a');
-var b = cy.$('#b');
+//var a = cy.$('#a');
+//var b = cy.$('#b');
 
-console.log(a.edgesWith(b));
+//console.log(a.edgesWith(b));
 
 
 //undo/redo extension
@@ -152,7 +168,7 @@ document.addEventListener("click", function(e){
   //add a node where the mouse is
     ur.do("add", {
       group: "nodes",
-      data: { label: "New node", variable: "new variable", value: 0 }, classes: "label",
+      data: { label: "New node", variable: "new variable", value: 0 }, classes: ".white" ,
       renderedPosition: {
         x: e.clientX,
         y: e.clientY,
@@ -164,48 +180,45 @@ document.addEventListener("click", function(e){
 cy.edgehandles({});
 
 
-//html labels extension
-cy.nodeHtmlLabel([{
-  query: '.label',
-  valign: "center",
-  halign: "center",
-  valignBox: "center",
-  halignBox: "center",
-  tpl: function(data) {
-      return '<p>' + data.label + '<br>' + data.variable + ': ' +  data.value + '</p>';
-  }
-}]);
 
+//function that changes the color of nodes and edges based off of the color dropdown
+//defined before function
+var newcolor = "";
+var colornode = "";
+var oldnodecolor = "";
+var coloredge = "";
+var oldedgecolor = "";
 
-//change the color of nodes and edges
-//listens to whether the user selects an option on the dropdown form with ID "colors"
 function changecolor(){    
       //the newcolor variable is the selected color in the dropdown
-      var newcolor = colors.options[colors.selectedIndex].text;
+      newcolor = colors.options[colors.selectedIndex].text;
       //when you select a node (or nodes)
       cy.on("select", "node", function(e){
         //the target node is the variable 'node'
-        var node = e.target;
-        //the old color of the node is saved as "oldcolor"
-        var oldnodecolor = node.classes()[1];
+        colornode = e.target;
+        //the old color of the node is saved as "oldnodecolor"
+        oldnodecolor = colornode.classes()[0];
         //the old color is removed and the new color is added to the node
-        node.removeClass(oldnodecolor);
-        node.addClass(newcolor);
-        console.log(oldnodecolor)
+        colornode.removeClass(oldnodecolor);
+        colornode.addClass(newcolor);
+        console.log(oldnodecolor);
+        colornode.deselect();
       });
       //when you select an edge (or edges)
       cy.on("select", "edge", function(e){
         //the target node is the variable 'edge'
-        var edge = e.target;
-        //the old color of the edge is saved as "oldcolor"
-        var oldedgecolor = edge.classes()[0];
+        coloredge = e.target;
+        //the old color of the edge is saved as "oldedgecolor"
+        oldedgecolor = coloredge.classes()[0];
         //the old color is removed and the new color is added to the edge
-        edge.removeClass(oldedgecolor);
-        edge.addClass(newcolor);
-        console.log(oldedgecolor)
+        coloredge.removeClass(oldedgecolor);
+        coloredge.addClass(newcolor);
+        console.log(oldedgecolor);
+        coloredge.deselect();
       });
 }
 
+//trying to write an undo color function (doesn't work rn)
 function undocolor(oldcolor, newcolor, node = null, edge = null) {
   if (node) {
     node.removeClass(newcolor);
@@ -216,30 +229,70 @@ function undocolor(oldcolor, newcolor, node = null, edge = null) {
     edge.addClass(oldcolor);
   }
 }
-
 ur.action("redoundocolor", changecolor, undocolor);
 
+////listens to whether the user selects an option on the dropdown form with ID "colors"
 document.getElementById("colors").addEventListener("change", function(e) {
+  //runs the changecolor function
   changecolor()
 });
 
-//this has a weird bug right now
-//it changes every previously selected node's label also?
+//change node shape function
+var newshape = "";
+var shapenode = "";
+var oldnodeshape = "";
+
+function changeshape(){    
+  //the newcolor variable is the selected color in the dropdown
+  newshape = shapes.options[shapes.selectedIndex].text;
+  //when you select a node (or nodes)
+  cy.on("select", "node", function(e){
+    //the target node is the variable 'node'
+    shapenode = e.target;
+    //the old color of the node is saved as "oldnodecolor"
+    oldnodeshape = shapenode.classes()[0];
+    //the old color is removed and the new color is added to the node
+    shapenode.removeClass(oldnodeshape);
+    shapenode.addClass(newshape);
+    console.log(oldnodeshape);
+    shapenode.deselect();
+  });
+}
+
+
+////listens to whether the user selects an option on the dropdown form with ID "colors"
+document.getElementById("shapes").addEventListener("change", function(e) {
+  //runs the changecolor function
+  changeshape()
+});
+
+
+//changes the label of a node
+//labelnode and newval declared outside of function
+var labelnode = "";
 //when a node is selected
 cy.on("select", "node", function(e){
-  //the selected node is the variable, 'node'
-  var node = e.target;
+  //the selected node is the variable, 'labelnode'
+  labelnode = e.target;
   //when the label button div is clicked
   document.getElementById("labelbutton").addEventListener("click", function(e) {
-    //the node's data is changed to the input from the nodelabel div
-    node.data('label', document.getElementById("nodelabel").value);
-    console.log(node.data('label'));
-    console.log(node)
-    node.data('variable', document.getElementById("nodevariable").value);
-    var newval = Number(node.data('value')) + Number(document.getElementById("nodevariablevalue").value);
-    node.data('value', newval);
+    //the node's label is changed to the input from the nodelabel div
+    labelnode.data('label', document.getElementById("nodelabel").value);
   })
 });
 
-//end of DOM listener
+//changes the variable and value of an edge
+cy.on("select", "edge", function(e){
+  //the selected node is the variable, 'labeledge'
+  labeledge = e.target;
+  document.getElementById("variablevaluesbutton").addEventListener("click", function(e) {
+    //the node's variable is changed to the input from the nodevariable div
+    labeledge.data('variable', document.getElementById("edgevariable").value);
+    //newval is the old value of the node + the new value of the node from the nodevariable div
+    labeledge.data('value', Number(document.getElementById("edgevariablevalue").value));
+    labeledge.data('label', document.getElementById("edgevariablevalue").value + " " + document.getElementById("edgevariable").value )
+  });
 });
+
+
+});//end of DOM listener

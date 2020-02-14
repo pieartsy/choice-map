@@ -1,0 +1,36 @@
+#cy {
+    width: 70%;
+    height: 100%;
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    border-right-style: solid;
+    border-right-width: 5px;
+    border-right-color: black;
+}
+
+#sidebar {
+    height: 100%;
+    width: 25%;
+    position: absolute;
+    right: 0px;
+    padding: 2.5%;;
+}
+
+.cy-title {
+    text-align: center;
+    font-size: 13px;
+    width: 130px;
+    font-family: "Helvetica", Arial, sans-serif;
+    word-wrap: break-word;
+  }
+
+  .cy-title__title {
+    font-size: 1.25em;
+  }
+  
+  .cy-title__info {
+    color:rgb(63, 63, 63);
+    font-style: italic;
+    font-size: .95em;
+  }

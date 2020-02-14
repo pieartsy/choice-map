@@ -1,6 +1,12 @@
-this stuff doesn't work yet :( so i will keep it from cluttering my code
-
-
+  document.getElementById("variablevaluesbutton").addEventListener("click", function(e) {
+    //the node's variable is changed to the input from the nodevariable div
+    labelnode.data('variable', document.getElementById("nodevariable").value);
+    //newval is the old value of the node + the new value of the node from the nodevariable div
+    newval = Number(labelnode.data('value')) + Number(document.getElementById("nodevariablevalue").value);
+    console.log("nodevariablevalue: " + Number(document.getElementById("nodevariablevalue").value))
+    console.log("labelnode value:" + Number(labelnode.data('value')));
+    labelnode.data('value', newval);
+  });
 
 var makeTippy = function(node, text){
   var ref = node.popperRef();

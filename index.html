@@ -7,14 +7,12 @@
     <!--makes it responsive-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Interactive Fiction Choices Map</title>
-    <link rel = "stylesheet" type = "text/css" href = "exts\stylesheet.css">
+    <link rel = "stylesheet" type = "text/css" href = "stylesheet.css">
     <!--cytoscape, a graphing library-->
     <script src="exts\cytoscape.min.js"></script>
     <!--allows drag and drop edge creation-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.10/lodash.js"></script>
     <script src="exts\cytoscape-edgehandles.js"></script>
-    <!--html labels-->
-    <script src="exts\cytoscape-node-html-label.min.js"></script>
     <!--allows undo and redo-->
     <script src="exts\cytoscape-undo-redo.js"></script>
     <!--context menu
@@ -36,10 +34,10 @@
             <li>alt+click to create node </li>
             <li>drag from node to create connection</li>
             <li>select a node or connection and press delete to delete</li>
-            <li>ctrl+z to undo, ctrl+y to redo [doesn't work with creation of connections, working on it!]</li>
+       <!--    <li>ctrl+z to undo, ctrl+y to redo [doesn't work with creation of connections, working on it!]</li>--> 
         </ul>
         <form>
-            Select a color, then a node or edge:
+            Select a color, then a node or edge to change its color:
             <select id="colors">
               <option></option>
               <option>red</option>
@@ -53,14 +51,29 @@
               <option>black</option>
             </select>
           </form>
-<br>
+          <br>
           <form>
-            Select a node or edge, then input here to change its label.<br>
-            Put the name of the node here.
-            Node label: <input type="text" id="nodelabel" value=""><br><br>
-            If a variable's value is changed, put the variable and the amount it increases or decreases here.
-            Node variable (if any): <input type="text" id="nodevariable" value=""> Node variable change: <input type="number" id="nodevariablevalue" value=""><br><br>
-            <input type="button" id="labelbutton" value="Submit">
+            Select a shape, then a node to change its shape:
+            <select id="shapes">
+              <option></option>
+              <option>ellipse</option>
+              <option>rectangle</option>
+              <option>diamond</option>
+              <option>pentagon</option>
+              <option>hexagon</option>
+              <option>star</option>
+            </select>
+          </form>
+          <br>
+          <form>
+            Select a node, then input here to change its label.<br>
+            Node label: <input type="text" id="nodelabel" value=""><input type="button" id="labelbutton" value="Submit"><br><br>
+          </form>
+          <form>  
+            Select an edge, then input here to put whether a variable's value increases or decreases.<br>
+            Edge variable name: <input type="text" id="edgevariable" value=""><br>
+            Edge variable change: <input type="number" id="edgevariablevalue" value=""><br><br>
+            <input type="button" id="variablevaluesbutton" value="Submit">
           </form>
     </div>
     <div id="cy"></div>
