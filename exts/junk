@@ -91,3 +91,86 @@ cy.cxtmenu({
     }
   ]
 });
+
+
+CHANGE COLOR OLD
+
+//function that changes the color of nodes and edges based off of the color dropdown
+function changecolor(){    
+      //the newcolor variable is the selected color in the dropdown
+      let newcolor = colors.options[colors.selectedIndex].text;
+      //when you select a node (or nodes)
+      cy.on("select", "node", function(e){
+        //the target node is the variable 'node'
+        let colornode = e.target;
+        //the old color of the node is saved as "oldnodecolor"
+        let oldnodecolor = colornode.classes()[0];
+        console.log("old node color and classes = " + oldnodecolor + ", " + colornode.classes());
+        //the old color is removed and the new color is added to the node
+        colornode.removeClass(oldnodecolor);
+        console.log("without old node color, classes = " + colornode.classes());
+        colornode.addClass(newcolor);
+        console.log("new node color and classes = " + oldnodecolor + ", " + colornode.classes());
+        colornode.deselect();
+      });
+      //when you select an edge (or edges)
+      cy.on("select", "edge", function(e){
+        //the target node is the variable 'edge'
+        let coloredge = e.target;
+        //the old color of the edge is saved as "oldedgecolor"
+        let oldedgecolor = coloredge.classes();
+        //the old color is removed and the new color is added to the edge
+        coloredge.removeClass(oldedgecolor);
+        coloredge.addClass(newcolor);
+        console.log(oldedgecolor);
+        coloredge.deselect();
+      });
+}
+
+//trying to write an undo color function (doesn't work rn)
+//function undocolor(oldcolor, newcolor, node = null, edge = null) {
+//  if (node) {
+  //  node.removeClass(newcolor);
+    //node.addClass(oldcolor);
+//  }
+  //else if (edge) {
+    //edge.removeClass(newcolor);
+    //edge.addClass(oldcolor);
+ // }
+//}
+//ur.action("redoundocolor", changecolor, undocolor);
+
+////listens to whether the user selects an option on the dropdown form with ID "colors"
+document.getElementById("colors").onchange = function(e) {
+  //runs the changecolor function
+  changecolor()
+};
+
+//change node shape function
+
+function changeshape(){    
+  //the newcolor variable is the selected color in the dropdown
+  let newshape = shapes.options[shapes.selectedIndex].text;
+  //when you select a node (or nodes)
+  cy.on("select", "node", function(e){
+    //the target node is the variable 'node'
+    let shapenode = e.target;
+    console.log(shapenode)
+    //the old color of the node is saved as "oldnodeshape"
+    let oldnodeshape = shapenode.classes()[1];
+    console.log("old node shape and classes = " + oldnodeshape + ", " + shapenode.classes());
+    //the old shape is removed and the new shape is added to the node
+    shapenode.removeClass(oldnodeshape);
+    console.log("without old node shape, classes = " + shapenode.classes());
+    shapenode.addClass(newshape);
+    console.log("new node shape + classes = " + newnodeshape + ", " + shapenode.classes());
+    shapenode.deselect();
+  });
+}
+
+
+////listens to whether the user selects an option on the dropdown form with ID "shapes"
+document.getElementById("shapes").onchange = function(e) {
+  //runs the changeshape function
+  changeshape();
+};

@@ -8,11 +8,11 @@ var cy = cytoscape({
 elements: {
   //the circles with labels
     nodes: [
-      { data: { id: 'a', label: "atest", variable: "avariable", value: 1 }, classes: [".white", ".ellipse"] },
-      { data: { id: 'b', label: "btest", variable: "bvariable", value: 2 }, classes: [".white", ".ellipse"] },
-      { data: { id: 'c', label: "ctest", variable: "cvariable", value: 4  }, classes: [".white", ".ellipse"] },
-      { data: { id: 'd', label: "dtest", variable: "dvariable", value: -2  }, classes: [".white", ".ellipse"] },
-      { data: { id: 'e', label: "etest", variable: "evariable", value: 3  }, classes: [".white", ".ellipse"] },
+      { data: { id: 'a', label: "atest", variable: "avariable", value: 1 }, classes: ["white", "ellipse"] },
+      { data: { id: 'b', label: "btest", variable: "bvariable", value: 2 }, classes: ["white", "ellipse"] },
+      { data: { id: 'c', label: "ctest", variable: "cvariable", value: 4  }, classes: ["white", "ellipse"] },
+      { data: { id: 'd', label: "dtest", variable: "dvariable", value: -2  }, classes: ["white", "ellipse"] },
+      { data: { id: 'e', label: "etest", variable: "evariable", value: 3  }, classes: ["white", "ellipse"] },
     ],
     //the lines connecting them
     edges: [
@@ -162,7 +162,7 @@ document.addEventListener("keydown", function (e) {
 });
 
 //listens for a mouse click
-document.addEventListener("click", function(e){
+document.onclick = function(e){
   //if alt key is pressed at the same time
   if (e.altKey)
   //add a node where the mouse is
@@ -174,124 +174,76 @@ document.addEventListener("click", function(e){
         y: e.clientY,
       },
     });
-});
+};
 
 //edge handles extension
 cy.edgehandles({});
 
 
-
-//function that changes the color of nodes and edges based off of the color dropdown
-//defined before function
-var newcolor = "";
-var colornode = "";
-var oldnodecolor = "";
-var coloredge = "";
-var oldedgecolor = "";
-
-function changecolor(){    
-      //the newcolor variable is the selected color in the dropdown
-      newcolor = colors.options[colors.selectedIndex].text;
-      //when you select a node (or nodes)
-      cy.on("select", "node", function(e){
-        //the target node is the variable 'node'
-        colornode = e.target;
-        //the old color of the node is saved as "oldnodecolor"
-        oldnodecolor = colornode.classes()[0];
-        //the old color is removed and the new color is added to the node
-        colornode.removeClass(oldnodecolor);
-        colornode.addClass(newcolor);
-        console.log(oldnodecolor);
-        colornode.deselect();
-      });
-      //when you select an edge (or edges)
-      cy.on("select", "edge", function(e){
-        //the target node is the variable 'edge'
-        coloredge = e.target;
-        //the old color of the edge is saved as "oldedgecolor"
-        oldedgecolor = coloredge.classes()[0];
-        //the old color is removed and the new color is added to the edge
-        coloredge.removeClass(oldedgecolor);
-        coloredge.addClass(newcolor);
-        console.log(oldedgecolor);
-        coloredge.deselect();
-      });
-}
-
-//trying to write an undo color function (doesn't work rn)
-function undocolor(oldcolor, newcolor, node = null, edge = null) {
-  if (node) {
-    node.removeClass(newcolor);
-    node.addClass(oldcolor);
-  }
-  else if (edge) {
-    edge.removeClass(newcolor);
-    edge.addClass(oldcolor);
-  }
-}
-ur.action("redoundocolor", changecolor, undocolor);
-
-////listens to whether the user selects an option on the dropdown form with ID "colors"
-document.getElementById("colors").addEventListener("change", function(e) {
-  //runs the changecolor function
-  changecolor()
+var selectednodes = [];
+cy.on("select", "node", function(e) {
+  selectednodes.push(e.target);
+  console.log(selectednodes);
 });
 
-//change node shape function
-var newshape = "";
-var shapenode = "";
-var oldnodeshape = "";
+cy.on("unselect", "node", function(e) {
+  selectednodes.splice(selectednodes.indexOf(e.target), 1);
+  console.log(selectednodes);
+});
 
-function changeshape(){    
-  //the newcolor variable is the selected color in the dropdown
-  newshape = shapes.options[shapes.selectedIndex].text;
-  //when you select a node (or nodes)
-  cy.on("select", "node", function(e){
-    //the target node is the variable 'node'
-    shapenode = e.target;
-    //the old color of the node is saved as "oldnodecolor"
-    oldnodeshape = shapenode.classes()[0];
-    //the old color is removed and the new color is added to the node
-    shapenode.removeClass(oldnodeshape);
-    shapenode.addClass(newshape);
-    console.log(oldnodeshape);
-    shapenode.deselect();
+//color changing function
+cy.on("select", "node", function(e) {
+  //colornode is the selected node
+  let colornode = e.target;
+  //the old color is the name of the first class in the node
+  let oldcolor = colornode.classes()[0];
+  console.log("old color of node: " + oldcolor);
+  console.log("current classes: " + colornode.classes())
+  let colordropdown = document.getElementById('colors');
+  let coloroptions = [];
+  for (i = 0; i < colordropdown.options.length; i++) {
+    coloroptions.push(colordropdown.options[i].text);
+  }
+  console.log("color dropdown: " + coloroptions);
+  console.log("color options' index of old color: "+ coloroptions.indexOf(oldcolor));
+  if (colordropdown.selectedIndex != coloroptions.indexOf(oldcolor)) {
+    console.log("selected index: " + colordropdown.selectedIndex)
+    colordropdown.selectedIndex = coloroptions.indexOf(oldcolor);
+    console.log("new selected index: " + colordropdown.selectedIndex)
+  }
+  colordropdown.onchange = (function(e) {
+    console.log("previous classes: " + colornode.classes());
+    colornode.classes(colordropdown.value);
+    console.log("new classes: " + colornode.classes());
   });
-}
-
-
-////listens to whether the user selects an option on the dropdown form with ID "colors"
-document.getElementById("shapes").addEventListener("change", function(e) {
-  //runs the changecolor function
-  changeshape()
 });
-
 
 //changes the label of a node
 //labelnode and newval declared outside of function
-var labelnode = "";
 //when a node is selected
 cy.on("select", "node", function(e){
   //the selected node is the variable, 'labelnode'
-  labelnode = e.target;
+  let labelnode = e.target;
   //when the label button div is clicked
-  document.getElementById("labelbutton").addEventListener("click", function(e) {
+  document.getElementById("labelbutton").onclick = (function(e) {
     //the node's label is changed to the input from the nodelabel div
-    labelnode.data('label', document.getElementById("nodelabel").value);
+    console.log("label node = " + labelnode);
+    let nodelabel = document.getElementById("nodelabel").value;
+    labelnode.data('label', nodelabel);
   })
 });
 
 //changes the variable and value of an edge
 cy.on("select", "edge", function(e){
   //the selected node is the variable, 'labeledge'
-  labeledge = e.target;
-  document.getElementById("variablevaluesbutton").addEventListener("click", function(e) {
+  let labeledge = e.target;
+  document.getElementById("variablevaluesbutton").onclick =  function(e) {
     //the node's variable is changed to the input from the nodevariable div
     labeledge.data('variable', document.getElementById("edgevariable").value);
     //newval is the old value of the node + the new value of the node from the nodevariable div
     labeledge.data('value', Number(document.getElementById("edgevariablevalue").value));
     labeledge.data('label', document.getElementById("edgevariablevalue").value + " " + document.getElementById("edgevariable").value )
-  });
+  };
 });
 
 
@@ -306,9 +258,9 @@ function savejson(exportName, exportObj){
   downloadjson.remove();
 }
 //save listener
-document.getElementById("save").addEventListener("click", function(e) {
+document.getElementById("save").onclick =  function(e) {
  savejson('graph', cy.json());
-});
+};
 
 //export png function
 function exportpng(filename, data) {
@@ -318,11 +270,11 @@ function exportpng(filename, data) {
   link.click();
 }
 //export png listener
-document.getElementById("export").addEventListener("click", function(e) {
+document.getElementById("export").onclick =  function(e) {
   exportpng('graph', cy.png());
-});
+};
 
-//document.getElementById("load").addEventListener("click", function(e) {
+//document.getElementById("load").onclick =  function(e) {
   //  var file = e.target.files[0];
     //if (file) {
 //      var reader = new FileReader();

@@ -1,12 +1,10 @@
 doubling effect of name change // fixed
 
-xxxx formatting and styling html labels xxxx removed
-
-xxxx changing size of node based on html label xxxx removed
-
 can't undo or redo colors, labels, or edge adding
 
 doubling effect of value change // fixed
+
+when you change a shape it changes the color back to white. when you change a color it changes the shape back to ellipse
 
 if you turn an edge black the font turns white
 
@@ -16,3 +14,5 @@ features tba:
     load graph from json
 
 better "save as" json and png
+
+undefined when you try to change both shape and color at same time (i think because when there's a removed color, then there's no more element in array[1])
